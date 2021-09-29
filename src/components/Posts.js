@@ -19,8 +19,8 @@ const Posts = () => {
         <div className="Posts">
             {posts.map((post, index) => {
                 return (
-                    <div key={index} className="card w-75 p-3 border-dark mb-3">
-                        <div className="card-header">
+                    <div key={index} className="card w-75 p-3 border-dark m-3 shadow bg-body rounded">
+                        <div className="card-header bg-primary text-white">
                             {post.title}
                         </div>
                         <ul className="list-group list-group-flush">
