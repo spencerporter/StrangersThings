@@ -9,8 +9,8 @@ import {
 const App = () => {
     return (
         <div className="app">
-            <NavBar />
             <BrowserRouter>
+                <NavBar />
                 <Route exact path="/" component={Home} />
                 <Route path="/posts" component={Posts} />
                 <Route path="/profile" component={Profile} />
