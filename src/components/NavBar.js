@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter , Route , Link} from 'react-router-dom';
 
-const NavBar = () => {
+const NavBar = (currentUser) => {
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
             <div className="d-flex justify-content-between">
@@ -12,7 +12,7 @@ const NavBar = () => {
                         <Link className="nav-link active" aria-current="page" to="/">Home</Link>
                         <Link className="nav-link" to="/posts">Posts</Link>
                         <Link className="nav-link" to="/profile">Profile</Link>
-                        <Link className="nav-link disabled">Log Out</Link>
+                        {(currentUser ? <Link className="nav-link" to="/login">Log In</Link> : <Link className="nav-link disabled">Log Out</Link>)}
                     </div>
                 </div>
             </div>

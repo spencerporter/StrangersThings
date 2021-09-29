@@ -4,6 +4,7 @@ import { BrowserRouter , Route , Link} from 'react-router-dom';
 
 import {
     Home,
+    LogIn,
     NavBar, Posts, Profile
 } from "./components"
 const App = () => {
@@ -14,6 +15,7 @@ const App = () => {
                 <Route exact path="/" component={Home} />
                 <Route path="/posts" component={Posts} />
                 <Route path="/profile" component={Profile} />
+                <Route path="/login" component={LogIn} />
             </BrowserRouter>
         </div>
     )
