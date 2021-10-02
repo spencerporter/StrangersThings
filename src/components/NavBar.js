@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
-import { BrowserRouter , Route , Link} from 'react-router-dom';
+import React from "react";
+import { Link} from 'react-router-dom';
 
-const NavBar = () => {
-
+const NavBar = ({token, setToken}) => {
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
             <div className="d-flex justify-content-between p-3">
@@ -13,9 +12,10 @@ const NavBar = () => {
                         <Link className="nav-link active" aria-current="page" to="/">Home</Link>
                         <Link className="nav-link" to="/posts">Posts</Link>
                         <Link className="nav-link" to="/profile">Profile</Link>
-                        {(!localStorage.getItem("token") ? <Link className="nav-link" to="/login">Log In</Link> : 
+                        {(!token ? <Link className="nav-link" to="/login">Log In</Link> : 
                         <Link className="nav-link" to="/login" onClick={(event) => {
                             localStorage.removeItem("token");
+                            setToken("");
                         }}>Log Out</Link>)}
                     </div>
                 </div>

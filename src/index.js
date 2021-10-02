@@ -1,9 +1,10 @@
 import React, { useState , useEffect} from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter , Route , Link} from 'react-router-dom';
+import { BrowserRouter , Route } from 'react-router-dom';
 import { getUser } from './api';
 
 import {
+    AddPost,
     Home,
     LogIn,
     NavBar, Posts, Profile
@@ -16,23 +17,22 @@ const App = () => {
 
     useEffect(() => {
         const token = localStorage.getItem("token");
-        console.log(token);
         if(token){
             setToken(token);
             getUser(token, setUser);
-            console.log(user);
         }
     }, [])
 
     return (
         <div className="app">
             <BrowserRouter>
-                <NavBar />
-                <Route exact path="/" render={(routeProps) => <Home user={user} />} />
-                <Route path="/posts" component={Posts} />
-                <Route path="/profile" component={Profile} />
+                <NavBar token={token} setToken={setToken}/>
+                <Route exact path="/" render={(routeProps) => <Home token={token} user={user} />} />
+                <Route exact path="/posts" render={(routeProps) => <Posts token={token} user={user} />}/>
+                <Route path="/profile" render={(routeProps) => <Profile user={user} />} />
                 <Route path="/login" render={(routeProps) => <LogIn setToken={setToken} setUser={setUser} {...routeProps}/>}  />
                 <Route path="/register" render={(routeProps) => <LogIn setToken={setToken} setUser={setUser} {...routeProps}/>}  />
+                <Route path="/posts/add" render={(routeProps) => <AddPost token={token} user={user} {...routeProps}/>}  />
             </BrowserRouter>
         </div>
     )

@@ -1,23 +1,87 @@
 /**
  * API Calls
  */
-export const BASE_URL = 'https://strangers-things.herokuapp.com/api/2107-CSU-RM-WEB-PT/';
+import { BASE_URL } from "../constants";
 
+
+/**
+ * Post Functions
+ */
 export async function fetchPosts() {
     try {
         const response = await fetch(`${BASE_URL}/posts`)
-        const data = await response.json();
-        const posts = data.data.posts;
-        console.log(posts);
+        const result = await response.json();
+        const posts = result.data.posts;
         return posts;
     } catch (error) {
         console.error("Error retriving Posts", error);
     }
 }
 
-export async function login(username, password, setToken){
-    fetch(`${BASE_URL}/users/login`, {
+export async function fetchPostsWithToken(token) {
+    try{
+        const response = await fetch(`${BASE_URL}/posts`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        const result = await response.json();
+        const posts = result.data.posts;
+        return posts;
+    }catch (error){
+        console.error("Isssue Fetching Users Posts", error)
+    }
+}
+export async function getPostWithID(postID){
+
+}
+
+export async function postMessage(message, postID, token){
+    fetch(`${BASE_URL}/posts/${postID}/messages`, {
         method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            message: {
+            content: message
+        }
+    })
+    }).then(response => response.json())
+    .then(result => {
+        console.log(result);    
+    })
+    .catch(console.error);
+}
+
+export async function deletePostWithID (token, postID){
+    try{
+        const response = await fetch(`${BASE_URL}/posts/${postID}`, {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        const result = await response.json();
+        console.log(result);
+        return result;
+    }catch (error){
+        console.error("Isssue Fetching Users Posts", error)
+    }
+}
+
+/**
+ * User Functions
+ */
+
+export async function login(username, password){
+    try {
+        const response = await fetch(`${BASE_URL}/users/login`, {
+            method: "POST",
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -28,37 +92,32 @@ export async function login(username, password, setToken){
                 }
             })
         })
-        .then(response => response.json())
-        .then(result => {
-            console.log(result);
-            const token = result.data.token;
-            setToken(token);
-            localStorage.setItem("token", token);
-        })
-        .catch(console.error);
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        console.error("Error retriving Posts", error);
+    }
 }
 
-export async function register(username, password, setToken){
-    fetch(`${BASE_URL}/users/register`, {
-        method: "POST",
+export async function register(username, password){
+    try {
+        const response = await fetch(`${BASE_URL}/users/register`, {
+            method: "POST",
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 user: {
-                username: username,
-                password: password
+                    username: username,
+                    password: password
                 }
             })
         })
-    .then(response => response.json())
-    .then(result => {
-        console.log(result);
-        const token = result.data.token;
-        setToken(token);
-        localStorage.setItem("token", token);
-    })
-    .catch(console.error);
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        console.error("Error retriving Posts", error);
+    }
 }
 
 export async function getUser(token, setUser){
@@ -70,7 +129,6 @@ export async function getUser(token, setUser){
       })
     .then(response => response.json())
     .then(result => {
-        console.log(result);
         setUser(result.data)
         localStorage.setItem("user", result.data);
     })

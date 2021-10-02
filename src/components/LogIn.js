@@ -1,30 +1,59 @@
 import React, {useState} from "react";
-import { BrowserRouter , Route , Link, useHistory} from 'react-router-dom';
-
+import { Link, useHistory} from 'react-router-dom';
 import { login, register } from "../api";
+
+async function loginUser(username, password, setToken, history){
+    try{
+        const result = await login(username, password);
+        if(result.success === false){
+            document.getElementById("errorMessage").innerHTML = result.error.message;
+        }else{
+            const token = result.data.token;
+            setToken(token);
+            localStorage.setItem("token", token);
+            history.push("/");
+        }
+    }catch (error){
+        console.error("Error Logging in Users", error)
+    }
+}
+
+async function registerUser(username, password, confirmPassword, setToken, history){
+    if(confirmPassword === password){  
+        try{
+            const result = await register(username, password);
+            if(result.success === false){
+                document.getElementById("errorMessage").innerHTML = result.error.message;
+            }else{
+                const token = result.data.token;
+                setToken(token);
+                localStorage.setItem("token", token);
+                history.push("/");
+            }
+        }catch (error){
+            console.error("Error Logging in Users", error)
+        }
+    }else{
+        document.getElementById("errorMessage").innerHTML = "Passwords must match!";
+    }     
+}
 
 const LogIn = ({setToken , match}) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [passwordsSame, setPasswordsSame] = useState(false);
 
     const history = useHistory();
 
     return(
-        <form className="m-3 w-50" 
+        <form className="m-3 w-50 position-absolute top-50 start-50 translate-middle" 
             onSubmit={(event) => {
                 event.preventDefault();
  
                 if(match.url === "/register"){
-                    console.log("Register: ",username, password, confirmPassword)
-                    //TODO: Check Confirm Password
-                    register(username, password, setToken)
-                    history.push("/");
+                    registerUser(username, password, confirmPassword, setToken, history);
                 }else {
-                    console.log("Login: ",username, password)
-                    login(username, password, setToken)
-                    history.push("/");
+                    loginUser(username, password, setToken, history);
                 }
             }}
         >
@@ -46,22 +75,12 @@ const LogIn = ({setToken , match}) => {
                             onChange={
                                 ({target: {value}}) => {
                                     setConfirmPassword(value)
-                                    setPasswordsSame(password === confirmPassword)
                                 }
                         }/>
-                        {/* TODO: Fix this vvv */}
-                        {/* {(passwordsSame === true ? 
-                            <div className="valid-feedback">
-                                Looks good!
-                            </div> 
-                            : 
-                            <div id="validationServerPasswordFeedback" className="invalid-feedback">
-                                Passwords must be the same.
-                            </div>
-                        )} */}
                     </div>
                 </div>
             : null)}
+            <div id="errorMessage" className="danger m-3"> </div>
             <button type="submit" className="btn btn-primary">Login</button>
             <div className="mb-3">                
                 {(match.url === "/register" ?
