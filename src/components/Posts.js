@@ -48,18 +48,19 @@ const Posts = ({token, user}) => {
     }, [token]);
 
     return (
-        <div id="posts" className="centered">
-            <form className="d-flex">
-                <input className="form-control me-2" type="search" placeholder="Search Posts" aria-label="Search"
-                onChange={({target : {value}}) => {
-                    const filteredPosts = posts.filter(post => postMatches(post, value.toLowerCase()));
-                    const postsToDisplay = value.length ? filteredPosts : posts;
-                    setDisplayPosts(postsToDisplay)
-                }}/>
-            </form>
+        <div id="posts" className="centered w-75">
+            <div className="horizGroup">
+                <form className="d-flex w-75">
+                    <input className="form-control me-2" type="search" placeholder="Search Posts" aria-label="Search"
+                    onChange={({target : {value}}) => {
+                        const filteredPosts = posts.filter(post => postMatches(post, value.toLowerCase()));
+                        const postsToDisplay = value.length ? filteredPosts : posts;
+                        setDisplayPosts(postsToDisplay)
+                    }}/>
+                </form>
 
-            {(token !== "" ? <Link className="btn btn-outline-primary m-3" to="/posts/add">Add a Post</Link> : null)}
-            
+                {(token !== "" ? <Link className="btn btn-outline-primary m-3" to="/posts/add">Add a Post</Link> : null)}
+            </div>
             {displayPosts.map((post, index) => {
                 return (
                     <div key={index} className="card w-75 p-3 border-dark m-3 shadow bg-body rounded">
@@ -76,7 +77,7 @@ const Posts = ({token, user}) => {
                                 <div className="horizGroup">
                                     <button type="button" className="btn btn-outline-danger w-25 m-3" onClick={() => {deletePost(post._id,token,setPosts)}}>Delete</button>
                                     <button type="button" className="btn btn-outline-primary w-25 m-3" 
-                                    onClick={() => {history.push(`/posts/${post._id}`)}}>View Post</button>
+                                    onClick={() => {history.push(`/posts/post/${post._id}`)}}>View Post</button>
                                 </div>
                             :
                             <form onSubmit={(event) => {

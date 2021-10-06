@@ -48,8 +48,33 @@ export async function getPostWithID(token, postID, setPost){
 
         posts.forEach((post) => {
             if(post._id === postID) {
-                console.log("Post ", post)
                 setPost(post);
+            }
+        })
+    }catch (error){
+        console.error("Isssue Fetching Users Posts", error)
+    }
+}
+
+export async function getPostWithIDForEdit(token, postID, setTitle, setDescription, setPrice, setLocation, setWillDeliver){
+    try{
+        const response = await fetch(`${BASE_URL}/posts`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        const result = await response.json();
+        const posts = result.data.posts;
+
+        posts.forEach((post) => {
+            if(post._id === postID) {
+                setTitle(post.title);
+                setDescription(post.description);
+                setPrice(post.price);
+                setLocation(post.location);
+                setWillDeliver(post.willDeliver);
             }
         })
     }catch (error){
@@ -70,9 +95,6 @@ export async function postMessage(message, postID, token){
         }
     })
     }).then(response => response.json())
-    .then(result => {
-        console.log(result);    
-    })
     .catch(console.error);
 }
 

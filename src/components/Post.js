@@ -27,8 +27,11 @@ const Post = ({token, history, match, location}) => {
                         <li className="list-group-item">Price: {post.price}</li>
                         {post.willDeliver ? <li className="list-group-item">Will Deliver</li> : <li className="list-group-item">Will NOT Deliver</li>}
                         <div className="horizGroup">
+                            <button type="button" className="btn btn-outline-primary w-25 m-3" 
+                                onClick={() => {
+                                    history.push(`/posts/post/edit/${post._id}`);
+                                }}>Edit Post</button>
                             <button type="button" className="btn btn-outline-danger w-25 m-3" onClick={() => {deletePost(post._id,token, history)}}>Delete</button>
-                            {/* TODO: Edit */}
                         </div>
                     </ul>
                 </div>
@@ -51,7 +54,7 @@ const Post = ({token, history, match, location}) => {
             </div>
         )
     }else{
-        return <h1>Post Not Found</h1>;
+        return null
     }
 }
 

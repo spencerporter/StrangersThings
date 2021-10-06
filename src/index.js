@@ -4,7 +4,7 @@ import { BrowserRouter , Route } from 'react-router-dom';
 import { getUser } from './api';
 
 import {
-    AddPost,
+    AddEditPost,
     Home,
     LogIn,
     NavBar, Posts, Profile, Post
@@ -29,11 +29,12 @@ const App = () => {
                 <NavBar token={token} setToken={setToken}/>
                 <Route exact path="/" render={(routeProps) => <Home token={token} user={user} />} />
                 <Route exact path="/posts" render={(routeProps) => <Posts token={token} user={user} />}/>
-                <Route path="/posts/:postId" render={(routeProps) => <Post token={token} user={user} {...routeProps} />}/>
-                <Route path="/profile" render={(routeProps) => <Profile user={user} />} />
+                <Route exact path="/posts/add" render={(routeProps) => <AddEditPost token={token} user={user} isAdd={true} {...routeProps}/>}  />
+                <Route path="/posts/post/:postId" render={(routeProps) => <Post token={token} user={user} {...routeProps} />}/>
+                <Route path="/posts/post/edit/:postId" render={(routeProps) => <AddEditPost token={token} user={user} isAdd={false} {...routeProps}/>}  />
+                <Route path="/profile" render={(routeProps) => <Profile token={token} {...routeProps} />} />
                 <Route path="/login" render={(routeProps) => <LogIn setToken={setToken} setUser={setUser} {...routeProps}/>}  />
                 <Route path="/register" render={(routeProps) => <LogIn setToken={setToken} setUser={setUser} {...routeProps}/>}  />
-                <Route path="/posts/add" render={(routeProps) => <AddPost token={token} user={user} {...routeProps}/>}  />
             </BrowserRouter>
         </div>
     )

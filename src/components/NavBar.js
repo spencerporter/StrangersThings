@@ -12,10 +12,10 @@ const NavBar = ({token, setToken}) => {
                         <Link className="nav-link active" aria-current="page" to="/">Home</Link>
                         <Link className="nav-link active" to="/posts">Posts</Link>
                         <Link className="nav-link active" to="/profile">Profile</Link>
-                        {(!token ? <Link className="nav-link" to="/login">Log In</Link> : 
-                        <Link className="nav-link active" to="/login" onClick={(event) => {
-                            localStorage.removeItem("token");
-                            setToken("");
+                        {(!token ? <Link className="nav-link active" to="/login">Log In</Link> : 
+                            <Link className="nav-link active" to="/login" onClick={(event) => {
+                                localStorage.removeItem("token");
+                                setToken("");
                         }}>Log Out</Link>)}
                     </div>
                 </div>
