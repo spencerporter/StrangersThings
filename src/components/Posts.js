@@ -3,13 +3,15 @@ import { Link } from "react-router-dom";
 
 import { fetchPosts , fetchPostsWithToken , deletePostWithID, postMessage } from "../api";
 
-async function getPosts(token, setPosts){
+async function getPosts(token, setPosts, setDisplayPosts){
     if(token){
         const posts = await fetchPostsWithToken(token)
         setPosts(posts);
+        setDisplayPosts(posts);
     }else{
         const posts = await fetchPosts();
         setPosts(posts);
+        setDisplayPosts(posts);
     }
 }
 
@@ -23,17 +25,41 @@ async function sendMessage(message, postID, token, setPosts){
     getPosts(token, setPosts);
 }
 
+
+function postMatches(post, text) {
+    if(post.description.toLowerCase().includes(text)) return true;
+    if(post.author.username.toLowerCase().includes(text)) return true;
+    if(post.location.toLowerCase().includes(text)) return true;
+    if(post.price.toLowerCase().includes(text)) return true;
+    if(post.title.toLowerCase().includes(text)) return true;
+
+    return false;
+}
+
 const Posts = ({token, user}) => {
     const [posts, setPosts] = useState([]);
+    const [comments, setComments] = useState({});
+    const [displayPosts, setDisplayPosts] = useState([]);
 
     useEffect(() => {
-        getPosts(token, setPosts);
+        getPosts(token, setPosts, setDisplayPosts);
     }, [token]);
 
     return (
         <div id="posts" className="centered">
+            <form className="d-flex">
+                <input className="form-control me-2" type="search" placeholder="Search Posts" aria-label="Search"
+                onChange={({target : {value}}) => {
+                    const filteredPosts = posts.filter(post => postMatches(post, value.toLowerCase()));
+                    const postsToDisplay = value.length ? filteredPosts : posts;
+                    setDisplayPosts(postsToDisplay)
+                    console.log(displayPosts);
+                }}/>
+            </form>
+
             {(token !== "" ? <Link className="btn btn-outline-primary m-3" to="/posts/add">Add a Post</Link> : null)}
-            {posts.map((post, index) => {
+            
+            {displayPosts.map((post, index) => {
                 return (
                     <div key={index} className="card w-75 p-3 border-dark m-3 shadow bg-body rounded">
                         <div className="card-header bg-primary text-white">
@@ -50,12 +76,16 @@ const Posts = ({token, user}) => {
                             :
                             <form onSubmit={(event) => {
                                 event.preventDefault();
-                                const message = "Test Message" //TODO Get from Form
+                                const message = comments[post._id];
                                 sendMessage(message,post._id,token, setPosts);
                             }}>
                                 <div className="m-3">
                                     <label htmlFor="messageTextArea" className="form-label">Message the Author</label>
-                                    <textarea className="form-control" id="messageTextArea" rows="3"></textarea>
+                                    <textarea className="form-control" id="messageTextArea" rows="3" onChange={({target : {value}}) => {
+                                        let newComments = comments;
+                                        newComments[post._id] = value;
+                                        setComments(newComments);
+                                    }}></textarea>
                                 </div>
                                 <button type="submit" className="btn btn-outline-primary w-25 m-3">Send Message</button>
                             </form>
