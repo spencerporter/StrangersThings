@@ -7,7 +7,7 @@ import {
     AddPost,
     Home,
     LogIn,
-    NavBar, Posts, Profile
+    NavBar, Posts, Profile, Post
 } from "./components"
 const App = () => {
     const [token, setToken] = useState("");
@@ -29,6 +29,7 @@ const App = () => {
                 <NavBar token={token} setToken={setToken}/>
                 <Route exact path="/" render={(routeProps) => <Home token={token} user={user} />} />
                 <Route exact path="/posts" render={(routeProps) => <Posts token={token} user={user} />}/>
+                <Route path="/posts/:postId" render={(routeProps) => <Post token={token} user={user} {...routeProps} />}/>
                 <Route path="/profile" render={(routeProps) => <Profile user={user} />} />
                 <Route path="/login" render={(routeProps) => <LogIn setToken={setToken} setUser={setUser} {...routeProps}/>}  />
                 <Route path="/register" render={(routeProps) => <LogIn setToken={setToken} setUser={setUser} {...routeProps}/>}  />

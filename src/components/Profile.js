@@ -1,6 +1,7 @@
 import React from "react";
 
 const Profile = ({token, user}) => {
+    console.log(user);
     if(user.username){
         return (
             <div className="centered">
@@ -12,7 +13,7 @@ const Profile = ({token, user}) => {
                             return(
                                 <div key={index} className="card w-75 p-3 border-dark m-3 shadow bg-body rounded">
                                     <ul className="list-group list-group-flush">
-                                        <li className="list-group-item"><h3>Post: {message.post.description}</h3></li>
+                                        <li className="list-group-item"><h3>Post: {message.post.title}</h3></li>
                                         <li className="list-group-item">From: {message.fromUser.username}</li>
                                         <li className="list-group-item">Message: {message.content}</li>
                                     </ul>

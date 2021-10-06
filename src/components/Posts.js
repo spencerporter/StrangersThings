@@ -1,5 +1,5 @@
 import React, { useEffect, useState }from "react";
-import { Link } from "react-router-dom";
+import { Link , useHistory } from "react-router-dom";
 
 import { fetchPosts , fetchPostsWithToken , deletePostWithID, postMessage } from "../api";
 
@@ -41,6 +41,8 @@ const Posts = ({token, user}) => {
     const [comments, setComments] = useState({});
     const [displayPosts, setDisplayPosts] = useState([]);
 
+    const history = useHistory();
+
     useEffect(() => {
         getPosts(token, setPosts, setDisplayPosts);
     }, [token]);
@@ -53,7 +55,6 @@ const Posts = ({token, user}) => {
                     const filteredPosts = posts.filter(post => postMatches(post, value.toLowerCase()));
                     const postsToDisplay = value.length ? filteredPosts : posts;
                     setDisplayPosts(postsToDisplay)
-                    console.log(displayPosts);
                 }}/>
             </form>
 
@@ -72,7 +73,11 @@ const Posts = ({token, user}) => {
                             <li className="list-group-item">Price: {post.price}</li>
                             {post.willDeliver ? <li className="list-group-item">Will Deliver</li> : <li className="list-group-item">Will NOT Deliver</li>}
                             {post.isAuthor ? 
-                                <button type="button" className="btn btn-outline-danger w-25 m-3" onClick={() => {deletePost(post._id,token,setPosts)}}>Delete</button>
+                                <div className="horizGroup">
+                                    <button type="button" className="btn btn-outline-danger w-25 m-3" onClick={() => {deletePost(post._id,token,setPosts)}}>Delete</button>
+                                    <button type="button" className="btn btn-outline-primary w-25 m-3" 
+                                    onClick={() => {history.push(`/posts/${post._id}`)}}>View Post</button>
+                                </div>
                             :
                             <form onSubmit={(event) => {
                                 event.preventDefault();

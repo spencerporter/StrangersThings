@@ -34,8 +34,27 @@ export async function fetchPostsWithToken(token) {
         console.error("Isssue Fetching Users Posts", error)
     }
 }
-export async function getPostWithID(postID){
+export async function getPostWithID(token, postID, setPost){
+    try{
+        const response = await fetch(`${BASE_URL}/posts`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        const result = await response.json();
+        const posts = result.data.posts;
 
+        posts.forEach((post) => {
+            if(post._id === postID) {
+                console.log("Post ", post)
+                setPost(post);
+            }
+        })
+    }catch (error){
+        console.error("Isssue Fetching Users Posts", error)
+    }
 }
 
 export async function postMessage(message, postID, token){
@@ -67,7 +86,6 @@ export async function deletePostWithID (token, postID){
             }
         })
         const result = await response.json();
-        console.log(result);
         return result;
     }catch (error){
         console.error("Isssue Fetching Users Posts", error)
