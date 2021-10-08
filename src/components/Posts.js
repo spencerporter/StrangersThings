@@ -74,7 +74,7 @@ const Posts = ({token}) => {
                             <strong className="me-auto">Post Deleted</strong>
                         </Toast.Header>
                         <Toast.Body >
-                            Your Message has been sent!
+                            Your Post has been deleted!
                         </Toast.Body>
                     </Toast>
                 </ToastContainer>
