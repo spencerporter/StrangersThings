@@ -55,7 +55,7 @@ const Posts = ({token}) => {
         <div id="posts" className="centered w-75">
             {(showCommentAlert ? 
                 <ToastContainer className="pos-fix p-3" position="top-end">
-                    <Toast className="d-inline-block m-1" bg="Light" onClose={() => setShowCommentAlert(false)}>
+                    <Toast className="d-inline-block m-1" onClose={() => setShowCommentAlert(false)}>
                         <Toast.Header>
                             <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
                             <strong className="me-auto">Message Sent</strong>
@@ -68,7 +68,7 @@ const Posts = ({token}) => {
             : null)}
             {(showDeleteAlert ? 
                 <ToastContainer className="pos-fix p-3" position="top-end">
-                    <Toast className="d-inline-block m-1" bg="Light" onClose={() => setShowDeleteAlert(false)}>
+                    <Toast className="d-inline-block m-1" onClose={() => setShowDeleteAlert(false)}>
                         <Toast.Header>
                             <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
                             <strong className="me-auto">Post Deleted</strong>
