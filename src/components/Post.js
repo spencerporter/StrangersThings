@@ -6,7 +6,7 @@ async function deletePost(postID, token, history){
     history.push("/posts");
 }
 
-const Post = ({token, history, match, location}) => {
+const Post = ({token, history, match}) => {
     const [post, setPost] = useState({})
     
     useEffect(() => {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState }from "react";
 import { Link , useHistory } from "react-router-dom";
-
 import { fetchPosts , fetchPostsWithToken , deletePostWithID, postMessage } from "../api";
+import { Toast, ToastContainer } from "react-bootstrap";
 
 async function getPosts(token, setPosts, setDisplayPosts){
     if(token){
@@ -15,14 +15,16 @@ async function getPosts(token, setPosts, setDisplayPosts){
     }
 }
 
-async function deletePost(postID, token, setPosts){
+async function deletePost(postID, token, setPosts, setDisplayPosts, setShowDeleteAlert){
     await deletePostWithID(token, postID)
-    getPosts(token,setPosts);
+    getPosts(token,setPosts, setDisplayPosts);
+    setShowDeleteAlert(true);
 }
 
-async function sendMessage(message, postID, token, setPosts){
+async function sendMessage(message, postID, token, setPosts, setDisplayPosts, setShowCommentAlert){
     await postMessage(message,postID,token);
-    getPosts(token, setPosts);
+    getPosts(token, setPosts, setDisplayPosts);
+    setShowCommentAlert(true);
 }
 
 
@@ -36,10 +38,12 @@ function postMatches(post, text) {
     return false;
 }
 
-const Posts = ({token, user}) => {
+const Posts = ({token}) => {
     const [posts, setPosts] = useState([]);
     const [comments, setComments] = useState({});
     const [displayPosts, setDisplayPosts] = useState([]);
+    const [showCommentAlert, setShowCommentAlert] = useState(false);
+    const [showDeleteAlert, setShowDeleteAlert] = useState(false);
 
     const history = useHistory();
 
@@ -49,6 +53,32 @@ const Posts = ({token, user}) => {
 
     return (
         <div id="posts" className="centered w-75">
+            {(showCommentAlert ? 
+                <ToastContainer className="pos-fix p-3" position="top-end">
+                    <Toast className="d-inline-block m-1" bg="Light" onClose={() => setShowCommentAlert(false)}>
+                        <Toast.Header>
+                            <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
+                            <strong className="me-auto">Message Sent</strong>
+                        </Toast.Header>
+                        <Toast.Body >
+                            Your Message has been sent!
+                        </Toast.Body>
+                    </Toast>
+                </ToastContainer>
+            : null)}
+            {(showDeleteAlert ? 
+                <ToastContainer className="pos-fix p-3" position="top-end">
+                    <Toast className="d-inline-block m-1" bg="Light" onClose={() => setShowDeleteAlert(false)}>
+                        <Toast.Header>
+                            <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
+                            <strong className="me-auto">Post Deleted</strong>
+                        </Toast.Header>
+                        <Toast.Body >
+                            Your Message has been sent!
+                        </Toast.Body>
+                    </Toast>
+                </ToastContainer>
+            : null)}
             <div className="horizGroup">
                 <form className="d-flex w-75">
                     <input className="form-control me-2" type="search" placeholder="Search Posts" aria-label="Search"
@@ -75,7 +105,7 @@ const Posts = ({token, user}) => {
                             {post.willDeliver ? <li className="list-group-item">Will Deliver</li> : <li className="list-group-item">Will NOT Deliver</li>}
                             {post.isAuthor ? 
                                 <div className="horizGroup">
-                                    <button type="button" className="btn btn-outline-danger w-25 m-3" onClick={() => {deletePost(post._id,token,setPosts)}}>Delete</button>
+                                    <button type="button" className="btn btn-outline-danger w-25 m-3" onClick={() => {deletePost(post._id,token,setPosts, setDisplayPosts, setShowDeleteAlert)}}>Delete</button>
                                     <button type="button" className="btn btn-outline-primary w-25 m-3" 
                                     onClick={() => {history.push(`/posts/post/${post._id}`)}}>View Post</button>
                                 </div>
@@ -83,11 +113,12 @@ const Posts = ({token, user}) => {
                             <form onSubmit={(event) => {
                                 event.preventDefault();
                                 const message = comments[post._id];
-                                sendMessage(message,post._id,token, setPosts);
+                                sendMessage(message,post._id,token, setPosts, setDisplayPosts,setShowCommentAlert);
+                                comments[post._id] = ""
                             }}>
                                 <div className="m-3">
                                     <label htmlFor="messageTextArea" className="form-label">Message the Author</label>
-                                    <textarea className="form-control" id="messageTextArea" rows="3" onChange={({target : {value}}) => {
+                                    <textarea className="form-control" id="messageTextArea" rows="3" value={comments[post._id]} onChange={({target : {value}}) => {
                                         let newComments = comments;
                                         newComments[post._id] = value;
                                         setComments(newComments);

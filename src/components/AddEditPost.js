@@ -41,7 +41,7 @@ async function editPost(token, post, postId, history){
     .catch(console.error);
 }
 
-const AddEditPost = ({token, user, isAdd, match}) => {
+const AddEditPost = ({token, isAdd, match}) => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState("");
